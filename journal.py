@@ -16,7 +16,7 @@ CREATE TABLE entries (
 
 app = Flask(__name__)
 app.config['DATABASE'] = os.environ.get(
-    'DATABASE_URL', 'dbname=learning_journal user=miked, lfritts'
+    'DATABASE_URL', 'dbname=learning_journal'
 )
 
 
