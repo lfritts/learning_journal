@@ -5,6 +5,8 @@ import pytest
 from journal import app
 from journal import connect_db
 from journal import get_database_connection
+from journal import get_all_entries
+from journal import write_entry
 from journal import init_db
 
 
@@ -59,3 +61,20 @@ def test_write_entry(req_context):
     assert len(rows) == 1
     for val in expected:
         assert val in rows[0]
+
+
+def test_get_all_entries_empty(self):
+    with self.app.test_request_context('/'):
+        entries = get_all_entries()
+        self.assertEquals(len(entries), 0)
+
+
+def test_get_all_entries(self):
+    expected = ("My Title", "My Text")
+    with self.app.test_request_context('/'):
+        write_entry(*expected)
+        entries = get_all_entries()
+        self.assertEquals(len(entries), 1)
+        for entry in entries:
+            self.assertEquals(expected[0], entry['title'])
+            self.assertEquals(expected[1], entry['text'])
