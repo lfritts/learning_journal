@@ -21,6 +21,12 @@ DB_ENTRY_INSERT = """
 INSERT INTO entries (title, text, created) VALUES (%s, %s, %s)
 """
 
+
+DB_ENTRIES_LIST = """
+SELECT id, title, text, created FROM entries ORDER BY created DESC
+"""
+
+
 app = Flask(__name__)
 app.config['DATABASE'] = os.environ.get(
     'DATABASE_URL', 'dbname=learning_journal'
@@ -70,6 +76,15 @@ def write_entry(title, text):
     cur = con.cursor()
     now = datetime.datetime.utcnow()
     cur.execute(DB_ENTRY_INSERT, [title, text, now])
+
+
+def get_all_entries():
+    """return a list of all entries as dicts"""
+    con = get_database_connection()
+    cur = con.cursor()
+    cur.execute(DB_ENTRIES_LIST)
+    keys = ('id', 'title', 'text', 'created')
+    return [dict(zip(keys, row)) for row in cur.fetchall()]
 
 
 @app.route('/')
