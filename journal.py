@@ -5,6 +5,7 @@ import os
 import psycopg2
 from contextlib import closing
 import datetime
+from flask import render_template
 
 
 DB_SCHEMA = """
@@ -88,8 +89,9 @@ def get_all_entries():
 
 
 @app.route('/')
-def hello():
-    return u'Hello world!'
+def show_entries():
+    entries = get_all_entries()
+    return render_template('list_entries.html', entries=entries)
 
 if __name__ == '__main__':
     app.run(debug=True)
