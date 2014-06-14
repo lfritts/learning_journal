@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+{% if session.logged_in %}
+
+<form action="{{ url_for('edit_entry') }}" method="GET" class="edit_entry">
+  <div class="field">
+    <label for="title">Title</label>
+    <input type="text" size="30" name="title" id="title"
+      value = {{ entry.tile }}/>
+  </div>
+  <div class="field">
+    <label for="text">Text</label>
+    <textarea name="text" id="text" rows="5" cols="80"
+      value = {{ entry.text }}></textarea>
+  </div>
+  <div class="control_row">
+    <input type="submit" value="Accept" name="Accept Edit"/>
+  </div>
+</form>
+</aside>
+<form action="{{ url_for('edit_entry') }}" method="POST" class="edit_entry">
+
+{% endblock %}

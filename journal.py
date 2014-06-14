@@ -127,6 +127,15 @@ def add_entry():
     return redirect(url_for('show_entries'))
 
 
+@app.route('/edit', method=['GET', 'POST'])
+def edit_entry():
+    if request.method == 'GET':
+        try:
+
+
+
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
