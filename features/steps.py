@@ -1,9 +1,9 @@
 from lettuce import step
 from lettuce import world
-from learning_journal import app
+from journal import app
 
 
-@step('the displayed entries with an edit button (\d+)')
+@step('a post with id (\d+)')
 def the_entry_id(step, num):
     world.number = int(num)
 
@@ -16,3 +16,18 @@ def call_edit_screen_template(step):
 @step('I see the edit screen')
 def show_entry(step, expected):
     assert world.edit == expected, "Got %d" % expected
+
+
+@step('an edited post with id (\d+)')
+def the_edited_post(step, num):
+    world.number = int(num)
+
+
+@step('when I click submit')
+def call_update(step):
+    world.update = app.update_entry(world.number)
+
+
+@step('I see the updated post')
+def something(step, expected):
+    assert world.update == expected, "Got %d" % expected
