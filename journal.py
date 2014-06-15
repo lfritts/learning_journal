@@ -13,7 +13,9 @@ import os
 import psycopg2
 import datetime
 
-
+"""--------------------
+    SQL SCRIPTS
+-----------------------"""
 DB_SCHEMA = """
 DROP TABLE IF EXISTS entries;
 CREATE TABLE entries (
@@ -33,7 +35,13 @@ DB_ENTRIES_LIST = """
 SELECT id, title, text, created FROM entries ORDER BY created DESC
 """
 
+DB_ENTRY_GET = """
+SELECT id, title, text, created FROM entries WHERE id = entry_id
+"""
 
+"""--------------------
+    app functions
+-----------------------"""
 app = Flask(__name__)
 app.config['DATABASE'] = os.environ.get(
     'DATABASE_URL', 'dbname=learning_journal'
@@ -85,6 +93,9 @@ def teardown_request(exception):
         db.close()
 
 
+"""--------------------
+    hbvoiuvpiuvpiubpi
+-----------------------"""
 def write_entry(title, text):
     if not title or not text:
         raise ValueError("Title and text required for writing an entry")
