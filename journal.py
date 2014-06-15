@@ -36,11 +36,11 @@ SELECT id, title, text, created FROM entries ORDER BY created DESC
 """
 
 DB_ENTRY_GET = """
-SELECT id, title, text, created FROM entries WHERE id = entry_id
+SELECT id, title, text, created FROM entries WHERE id = %d
 """
 
 """--------------------
-    app functions
+    database functions
 -----------------------"""
 app = Flask(__name__)
 app.config['DATABASE'] = os.environ.get(
@@ -94,7 +94,7 @@ def teardown_request(exception):
 
 
 """--------------------
-    hbvoiuvpiuvpiubpi
+    journal methods
 -----------------------"""
 def write_entry(title, text):
     if not title or not text:
@@ -113,6 +113,14 @@ def get_all_entries():
     keys = ('id', 'title', 'text', 'created')
     return [dict(zip(keys, row)) for row in cur.fetchall()]
 
+def get_one_entry(id):
+    """return the selected entry for editing"""
+    con = get_database_connection()
+    cur = con.cursor()
+    cur.execute(DB_ENTRY_GET % id)
+    keys = ('id', 'title', 'text')
+    return cur.fetchone()
+
 
 def do_login(username='', passwd=''):
     if username != app.config['ADMIN_USERNAME']:
@@ -122,10 +130,15 @@ def do_login(username='', passwd=''):
     session['logged_in'] = True
 
 
+"""--------------------
+    app methods
+-----------------------"""
 @app.route('/')
 def show_entries():
     entries = get_all_entries()
     return render_template('list_entries.html', entries=entries)
+
+@app.route('/')
 
 
 @app.route('/add', methods=['POST'])
@@ -138,13 +151,17 @@ def add_entry():
     return redirect(url_for('show_entries'))
 
 
-@app.route('/edit', method=['GET', 'POST'])
+@app.route('/edit', methods=['GET', 'POST'])
 def edit_entry():
     if request.method == 'GET':
         try:
-
-
-
+            edit_this = get_one_entry(id)
+        except psycopg2.Error:
+            abort(500)
+        else:
+            return render_template('edit_entry.html', entries=edit_this)
+    if request.method == 'POST':
+        update_entry()
 
 
 @app.route('/login', methods=['GET', 'POST'])
