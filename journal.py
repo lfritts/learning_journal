@@ -12,6 +12,8 @@ from contextlib import closing
 import os
 import psycopg2
 import datetime
+import markdown
+
 
 """--------------------
     SQL SCRIPTS
@@ -38,11 +40,6 @@ SELECT id, title, text, created FROM entries ORDER BY created DESC
 DB_ENTRY_GET = """
 SELECT id, title, text, created FROM entries WHERE id = %s
 """
-
-# DB_ENTRY_GET = """
-# SELECT id, title, text, created FROM entries WHERE title = 'My Title'
-# """
-
 
 DB_UPDATE_ENTRY = """
 UPDATE entries SET title = %s, text = %s WHERE id = %s
@@ -105,6 +102,8 @@ def teardown_request(exception):
 """--------------------
     journal methods
 -----------------------"""
+
+
 def write_entry(title, text):
     if not title or not text:
         raise ValueError("Title and text required for writing an entry")
@@ -120,7 +119,10 @@ def get_all_entries():
     cur = con.cursor()
     cur.execute(DB_ENTRIES_LIST)
     keys = ('id', 'title', 'text', 'created')
-    return [dict(zip(keys, row)) for row in cur.fetchall()]
+    myEntries = [dict(zip(keys, row)) for row in cur.fetchall()]
+    for record in myEntries:
+        record['text'] = markdown_text(record['text'])
+    return myEntries
 
 
 def get_one_entry(entry_id):
@@ -144,6 +146,10 @@ def do_login(username='', passwd=''):
     if not pbkdf2_sha256.verify(passwd, app.config['ADMIN_PASSWORD']):
         raise ValueError
     session['logged_in'] = True
+
+
+def markdown_text(user_input):
+    return markdown.markdown(user_input, extensions=['codehilite'])
 
 
 """--------------------
