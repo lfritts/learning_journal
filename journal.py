@@ -39,6 +39,11 @@ DB_ENTRY_GET = """
 SELECT id, title, text, created FROM entries WHERE id = %s
 """
 
+# DB_ENTRY_GET = """
+# SELECT id, title, text, created FROM entries WHERE title = 'My Title'
+# """
+
+
 DB_UPDATE_ENTRY = """
 UPDATE entries SET title = %s, text = %s WHERE id = %s
 """
@@ -126,7 +131,7 @@ def get_one_entry(entry_id):
     return cur.fetchone()
 
 
-def update_entry(entry_id, title, text):
+def update_entry(title, text, entry_id):
     """update the entry selected for editing"""
     con = get_database_connection()
     cur = con.cursor()
@@ -149,8 +154,6 @@ def show_entries():
     entries = get_all_entries()
     return render_template('list_entries.html', entries=entries)
 
-@app.route('/')
-
 
 @app.route('/add', methods=['POST'])
 def add_entry():
@@ -162,23 +165,25 @@ def add_entry():
     return redirect(url_for('show_entries'))
 
 
-@app.route('/edit/<int:entry_id>', methods=['GET', 'POST'])
+@app.route('/edit/<int:entry_id>', methods=['GET'])
 def edit_entry(entry_id):
-    if request.method == 'GET':
-        try:
-            edit_this = get_one_entry(entry_id)
-        except psycopg2.Error:
-            abort(500)
-        else:
-            return render_template('edit_entry.html', entries=edit_this)
-    if request.method == 'POST':
-        try:
-            title = request.form['title']
-            text = request.form['text']
-            update_entry(title, text, entry_id)
-        except psycopg2.Error:
-            abort(500)
-        return redirect(url_for('show_entries'))
+    try:
+        edit_this = get_one_entry(entry_id)
+    except psycopg2.Error:
+        abort(500)
+    else:
+        return render_template('edit_entry.html', entries=edit_this)
+
+
+@app.route('/update_entry/<int:entry_id>', methods=['POST'])
+def update(entry_id):
+    try:
+        title = request.form['title']
+        text = request.form['text']
+        update_entry(title, text, entry_id)
+    except psycopg2.Error:
+        abort(500)
+    return redirect(url_for('show_entries'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
