@@ -94,8 +94,9 @@ def test_get_one_entry(req_context):
     expected = ("My Title", "My Text")
     write_entry(*expected)
     entry_2_update = get_one_entry(0)
-    assert expected[0]  == entry_2_update['title']
-    assert expected[0] == entry_2_update['text']
+    print entry_2_update
+    assert expected[0] == entry_2_update[1]
+    assert expected[1] == entry_2_update[2]
 
 
 def test_get_all_entries_empty(req_context):
