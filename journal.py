@@ -36,7 +36,11 @@ SELECT id, title, text, created FROM entries ORDER BY created DESC
 """
 
 DB_ENTRY_GET = """
-SELECT id, title, text, created FROM entries WHERE id = %d
+SELECT id, title, text, created FROM entries WHERE id = %s
+"""
+
+DB_UPDATE_ENTRY = """
+UPDATE entries SET title = %s, text = %s WHERE id = %s
 """
 
 """--------------------
@@ -113,13 +117,20 @@ def get_all_entries():
     keys = ('id', 'title', 'text', 'created')
     return [dict(zip(keys, row)) for row in cur.fetchall()]
 
-def get_one_entry(id):
+
+def get_one_entry(entry_id):
     """return the selected entry for editing"""
     con = get_database_connection()
     cur = con.cursor()
-    cur.execute(DB_ENTRY_GET % id)
-    keys = ('id', 'title', 'text')
+    cur.execute(DB_ENTRY_GET, [entry_id])
     return cur.fetchone()
+
+
+def update_entry(entry_id, title, text):
+    """update the entry selected for editing"""
+    con = get_database_connection()
+    cur = con.cursor()
+    cur.execute(DB_UPDATE_ENTRY, [title, text, entry_id])
 
 
 def do_login(username='', passwd=''):
@@ -151,17 +162,23 @@ def add_entry():
     return redirect(url_for('show_entries'))
 
 
-@app.route('/edit', methods=['GET', 'POST'])
-def edit_entry():
+@app.route('/edit/<int:entry_id>', methods=['GET', 'POST'])
+def edit_entry(entry_id):
     if request.method == 'GET':
         try:
-            edit_this = get_one_entry(id)
+            edit_this = get_one_entry(entry_id)
         except psycopg2.Error:
             abort(500)
         else:
             return render_template('edit_entry.html', entries=edit_this)
     if request.method == 'POST':
-        update_entry()
+        try:
+            title = request.form['title']
+            text = request.form['text']
+            update_entry(title, text, entry_id)
+        except psycopg2.Error:
+            abort(500)
+        return redirect(url_for('show_entries'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
