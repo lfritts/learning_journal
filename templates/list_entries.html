@@ -16,7 +16,27 @@
   </div>
 </form>
 </aside>
+<form action="{{ url_for('edit_entry') }}" method="GET" class="edit_entry">
+  <h2>Entries</h2>
+    {% for entry in entries %}
+    <article class="entry" id="entry={{entry.id}}">
+      <h3>{{ entry.title }}</h3>
+      <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
+      <div class="entry_body">
+        {{ entry.text|safe }}
+        <div class="select_entry">
+          <input type="submit" value=id name="Edit"/>
+        </div>
+      </div>
+    </article>
+    {% else %}
+    <div class="entry">
+      <p><em>No entries here so far</em></p>
+    </div>
+    {% endfor %}
+</form>
 {% endif %}
+{% if not session.logged_in %}
   <h2>Entries</h2>
   {% for entry in entries %}
   <article class="entry" id="entry={{entry.id}}">
@@ -31,4 +51,5 @@
     <p><em>No entries here so far</em></p>
   </div>
   {% endfor %}
+{% endif %}
 {% endblock %}
