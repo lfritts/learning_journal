@@ -16,7 +16,6 @@
   </div>
 </form>
 </aside>
-<form action="{{ url_for('edit_entry') }}" method="GET" class="edit_entry">
   <h2>Entries</h2>
     {% for entry in entries %}
     <article class="entry" id="entry={{entry.id}}">
@@ -25,7 +24,7 @@
       <div class="entry_body">
         {{ entry.text|safe }}
         <div class="select_entry">
-          <input type="submit" value=id name="Edit"/>
+          <a href="edit/{{entry.id}}">Edit</a>
         </div>
       </div>
     </article>
@@ -34,7 +33,6 @@
       <p><em>No entries here so far</em></p>
     </div>
     {% endfor %}
-</form>
 {% endif %}
 {% if not session.logged_in %}
   <h2>Entries</h2>
