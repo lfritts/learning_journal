@@ -83,6 +83,22 @@ def test_write_entry(req_context):
         assert val in rows[0]
 
 
+'''###############
+test edit functions
+################'''
+
+
+def test_get_one_entry(req_context):
+    from journal import get_one_entry
+    from journal import write_entry
+    expected = ("My Title", "My Text")
+    write_entry(*expected)
+    entry_2_update = get_one_entry(0)
+    print entry_2_update
+    assert expected[0] == entry_2_update[1]
+    assert expected[1] == entry_2_update[2]
+
+
 def test_get_all_entries_empty(req_context):
     from journal import get_all_entries
     entries = get_all_entries()
