@@ -15,9 +15,7 @@ import datetime
 import markdown
 
 
-"""--------------------
-    SQL SCRIPTS
------------------------"""
+# _____SQL SCRIPTS_____
 DB_SCHEMA = """
 DROP TABLE IF EXISTS entries;
 CREATE TABLE entries (
@@ -45,9 +43,7 @@ DB_UPDATE_ENTRY = """
 UPDATE entries SET title = %s, text = %s WHERE id = %s
 """
 
-"""--------------------
-    database functions
------------------------"""
+# _____database functions_____
 app = Flask(__name__)
 app.config['DATABASE'] = os.environ.get(
     'DATABASE_URL', 'dbname=learning_journal'
@@ -99,11 +95,7 @@ def teardown_request(exception):
         db.close()
 
 
-"""--------------------
-    journal methods
------------------------"""
-
-
+# _____journal methods_____
 def write_entry(title, text):
     if not title or not text:
         raise ValueError("Title and text required for writing an entry")
@@ -153,9 +145,7 @@ def markdown_text(user_input):
     return markdown.markdown(user_input, extensions=['codehilite'])
 
 
-"""--------------------
-    app methods
------------------------"""
+# _____app methods_____
 @app.route('/')
 def show_entries():
     entries = get_all_entries()
