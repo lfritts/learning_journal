@@ -135,9 +135,10 @@ def get_one_entry(entry_id):
 
 def update_entry(title, text, entry_id):
     """update the entry selected for editing"""
-    con = get_database_connection()
-    cur = con.cursor()
-    cur.execute(DB_UPDATE_ENTRY, [title, text, entry_id])
+    if session['logged_in'] is True:
+        con = get_database_connection()
+        cur = con.cursor()
+        cur.execute(DB_UPDATE_ENTRY, [title, text, entry_id])
 
 
 def do_login(username='', passwd=''):
