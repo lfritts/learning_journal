@@ -127,7 +127,6 @@ def get_one_entry(entry_id):
 
 def update_entry(title, text, entry_id):
     """update the entry selected for editing"""
-    # if session['logged_in'] is True:
     if session.get('logged_in', False):
         con = get_database_connection()
         cur = con.cursor()
