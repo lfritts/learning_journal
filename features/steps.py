@@ -66,14 +66,14 @@ def anonymous_request_edit_page(step):
 def no_edit_entry_form(step):
     body = lettuce.world.response.data
     # print body
-    msg = 'value="Accept" not in %s'
+    msg = 'found value="Accept" in %s'
     assert 'value="Accept"' not in body, msg % body
 
 
 @lettuce.step('I do see the edit entry form')
 def yes_edit_entry_form(step):
     body = lettuce.world.response.data
-    msg = 'value="Accept" in %s'
+    msg = 'did not find value="Accept" in %s'
     assert 'value="Accept"' in body, msg % body
 
 
@@ -123,7 +123,6 @@ def redirected_home(step):
 @lettuce.step('I do not see my new entry')
 def no_new_entry(step):
     body = lettuce.world.response.data
-    # print body
     for val in [lettuce.world.title, lettuce.world.text]:
         assert val not in body
 
@@ -155,14 +154,14 @@ def existing_entry(step):
 @lettuce.step('Then I do not see the edit entry link')
 def no_edit_link(step):
     body = lettuce.world.response.data
-    msg = "edit link in %s"
+    msg = "found edit link in %s"
     assert 'a href="edit"' not in body, msg % body
 
 
 @lettuce.step('Then I do see the edit entry link')
 def yes_edit_link(step):
     body = lettuce.world.response.data
-    msg = "edit link in %s"
+    msg = "did not find edit link in %s"
     assert 'a href="edit/1"' in body, msg % body
 
 
@@ -175,16 +174,23 @@ def text_with_markdown_and_plain(step):
 @lettuce.step('I see code highlighted in color')
 def see_highlighted_code(step):
     body = lettuce.world.response.data
-    msg = '<div class="codehilite"> in %s'
+    msg = 'did not find <div class="codehilite"> in %s'
     assert '<div class="codehilite">' in body, msg % body
 
 
 @lettuce.step('I see plain text without color')
 def see_plain_text(step):
     body = "".join(lettuce.world.response.data.split())
-    msg = '<divclass="entry_body"><p>Sampleplaintext.</p> in %s'
+    msg1 = 'did not find <divclass="entry_body"><p>Sampleplaintext.</p> in %s'
     assert '<divclass="entry_body"><p>Sampleplaintext.</p>' in \
-        body, msg % body
-    msg2 = '<divclass="codehilite"><p>Sampleplaintext.</p> not in %s'
+        body, msg1 % body
+    msg2 = 'found <divclass="codehilite"><p>Sampleplaintext.</p> in %s'
     assert '<divclass="codehilite"><p>Sampleplaintext.</p>' not in \
         body, msg2 % body
+
+
+@lettuce.step('I see a tweet button')
+def see_tweet(step):
+    body = lettuce.world.response.data
+    msg = 'did not find Tweet button in %s'
+    assert 'class="Twitter_button"' in body, msg % body
