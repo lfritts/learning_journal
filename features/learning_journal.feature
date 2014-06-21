@@ -31,7 +31,7 @@ Feature: Add ability to edit entries
         Then I do not see the edit entry form
 
     Scenario: Logged in user can see edit entry form
-        Given an anonymous user
+        Given an authenticated user
         When I add '/edit/1' to the home page url
         Then I do see the edit entry form
 
