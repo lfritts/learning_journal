@@ -73,3 +73,10 @@ Feature: Add ability to edit entries
         When I view the home page
         Then I see code highlighted in color
         And I see plain text without color
+
+    Scenario: Logged in user can tweet a post
+        Given an authenticated user
+        And any text
+        And an existing entry
+        When I view the home page
+        Then I see a tweet button
