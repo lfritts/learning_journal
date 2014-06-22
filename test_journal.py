@@ -136,9 +136,11 @@ def test_add_entries(db):
         u'title': u'Hello',
         u'text': u'This is a post',
     }
-    actual = app.test_client().post(
-        '/add', data=entry_data, follow_redirects=True
-    ).data
+    with app.test_client() as c:
+        with c.session_transaction() as sess:
+            sess['logged_in'] = True
+        actual = c.post(
+            '/add', data=entry_data, follow_redirects=True).data
     assert 'No entries here so far' not in actual
     for expected in entry_data.values():
         assert expected in actual
