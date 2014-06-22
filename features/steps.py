@@ -57,15 +57,13 @@ def yes_entry_form(step):
 @lettuce.step("I add '/edit/1' to the home page url")
 def anonymous_request_edit_page(step):
     with app.test_request_context('/'):
-        edit_url = url_for('show_entries') + '/edit/1'
-    print edit_url
+        edit_url = url_for('show_entries') + "edit/1"
     lettuce.world.response = lettuce.world.client.get(edit_url)
 
 
 @lettuce.step('I do not see the edit entry form')
 def no_edit_entry_form(step):
     body = lettuce.world.response.data
-    # print body
     msg = 'found value="Accept" in %s'
     assert 'value="Accept"' not in body, msg % body
 
@@ -101,11 +99,11 @@ def add_entry(step):
 @lettuce.step('I submit the edit form')
 def edit_entry(step):
     entry_data = {
-        'title': lettuce.world.title,
-        'text': lettuce.world.text,
+        'title': 'Some new title',
+        'text': 'Some new text',
     }
     lettuce.world.response = lettuce.world.client.post(
-        '/edit', data=entry_data, follow_redirects=False
+        '/update_entry/1', data=entry_data, follow_redirects=False
     )
 
 
@@ -124,14 +122,23 @@ def redirected_home(step):
 def no_new_entry(step):
     body = lettuce.world.response.data
     for val in [lettuce.world.title, lettuce.world.text]:
-        assert val not in body
+        assert val not in body, body
 
 
 @lettuce.step('I see my new entry')
 def yes_new_entry(step):
     body = lettuce.world.response.data
+    print body
     for val in [lettuce.world.title, lettuce.world.text]:
         assert val in body
+
+
+@lettuce.step('I see my edited entry')
+def yes_new_entry(step):
+    body = lettuce.world.response.data
+    print body
+    assert '<h3>Some new title</h3>' in body
+    assert '<p>Some new text</p>' in body
 
 
 @lettuce.step('any text')
@@ -187,10 +194,3 @@ def see_plain_text(step):
     msg2 = 'found <divclass="codehilite"><p>Sampleplaintext.</p> in %s'
     assert '<divclass="codehilite"><p>Sampleplaintext.</p>' not in \
         body, msg2 % body
-
-
-@lettuce.step('I see a tweet button')
-def see_tweet(step):
-    body = lettuce.world.response.data
-    msg = 'did not find Tweet button in %s'
-    assert 'class="Twitter_button"' in body, msg % body
