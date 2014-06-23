@@ -92,8 +92,9 @@ def test_get_one_entry(req_context):
     from journal import get_one_entry
     from journal import write_entry
     expected = ("My Title", "My Text")
-    write_entry(*expected)
-    entry_2_update = get_one_entry(0)
+    write_entry(*expected)    # find actual row numbers from test db
+    target_entry = run_independent_query('SELECT id FROM entries')[0]
+    entry_2_update = get_one_entry(target_entry)
     print entry_2_update
     assert expected[0] == entry_2_update[1]
     assert expected[1] == entry_2_update[2]
@@ -107,7 +108,7 @@ def test_get_all_entries_empty(req_context):
 
 def test_get_all_entries(req_context):
     from journal import get_all_entries, write_entry
-    expected = ("My Title", "My Text")
+    expected = ("My Title", "<p>My Text</p>")
     write_entry(*expected)
     entries = get_all_entries()
     assert len(entries) == 1
@@ -135,9 +136,11 @@ def test_add_entries(db):
         u'title': u'Hello',
         u'text': u'This is a post',
     }
-    actual = app.test_client().post(
-        '/add', data=entry_data, follow_redirects=True
-    ).data
+    with app.test_client() as c:
+        with c.session_transaction() as sess:
+            sess['logged_in'] = True
+        actual = c.post(
+            '/add', data=entry_data, follow_redirects=True).data
     assert 'No entries here so far' not in actual
     for expected in entry_data.values():
         assert expected in actual
