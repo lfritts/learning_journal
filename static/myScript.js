@@ -10,7 +10,17 @@ function addEntry() {
                 data: 'title': $(this).title.val(),
                       'text': $(this).text.val();
                 success: function(response) {
-                    $('.entry').prepend(response);
+                    $(".content").prepend(
+                        <article class="entry" id="entry=" + response.id>
+                        <h3>response.title</h3>
+      <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
+      <div class="entry_body">
+        {{ entry.text|safe }}
+        <div class="select_entry">
+          <a href="edit/{{entry.id}}">Edit</a>
+        </div>
+      </div>
+    </article>);
                 }
             })
         })
