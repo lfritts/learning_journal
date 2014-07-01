@@ -165,6 +165,10 @@ def add_entry():
 
 
 @app.route('/show_new_entry_ajax')
+def show_entry_with_ajax():
+    entry = get_one_entry_ajax()
+    return render_template('show_with_ajax.html', entry=entry)
+
 
 @app.route('/edit/<int:entry_id>', methods=['GET'])
 def edit_entry(entry_id):
