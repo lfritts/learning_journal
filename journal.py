@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
-from flask import Flask
-from flask import g
-from flask import render_template
-from flask import abort
-from flask import request
-from flask import url_for
-from flask import redirect
-from flask import session
+from flask import Flask, g, render_template, abort, request
+from flask import url_for, redirect, session
 from passlib.hash import pbkdf2_sha256
 from contextlib import closing
 import os
@@ -95,6 +89,14 @@ def teardown_request(exception):
         db.close()
 
 
+def do_login(username='', passwd=''):
+    if username != app.config['ADMIN_USERNAME']:
+        raise ValueError
+    if not pbkdf2_sha256.verify(passwd, app.config['ADMIN_PASSWORD']):
+        raise ValueError
+    session['logged_in'] = True
+
+
 # _____journal methods_____
 def write_entry(title, text):
     if not title or not text:
@@ -125,20 +127,19 @@ def get_one_entry(entry_id):
     return cur.fetchone()
 
 
+def get_one_entry_ajax():
+    con = get_database_connection()
+    cur = con.cursor()
+    cur.execute(DB_ENTRIES_LIST)
+    return cur.fetchone()
+
+
 def update_entry(title, text, entry_id):
     """update the entry selected for editing"""
     if session.get('logged_in', False):
         con = get_database_connection()
         cur = con.cursor()
         cur.execute(DB_UPDATE_ENTRY, [title, text, entry_id])
-
-
-def do_login(username='', passwd=''):
-    if username != app.config['ADMIN_USERNAME']:
-        raise ValueError
-    if not pbkdf2_sha256.verify(passwd, app.config['ADMIN_PASSWORD']):
-        raise ValueError
-    session['logged_in'] = True
 
 
 def markdown_text(user_input):
@@ -162,6 +163,8 @@ def add_entry():
                 abort(500)
     return redirect(url_for('show_entries'))
 
+
+@app.route('/show_new_entry_ajax')
 
 @app.route('/edit/<int:entry_id>', methods=['GET'])
 def edit_entry(entry_id):
