@@ -165,7 +165,7 @@ def add_entry():
 
 
 @app.route('/show_new_entry_ajax')
-def show_entry_with_ajax():
+def show_new_entry_ajax():
     entry = get_one_entry_ajax()
     return render_template('show_with_ajax.html', entry=entry)
 

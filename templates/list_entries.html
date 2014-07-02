@@ -16,39 +16,26 @@
   </div>
 </form>
 </aside>
-  <h2>Entries</h2>
-    <div=class="new"></div>
-    {% for entry in entries %}
-    <article class="entry" id="entry={{entry.id}}">
-      <h3>{{ entry.title }}</h3>
-      <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
-      <div class="entry_body">
-        {{ entry.text|safe }}
-        <div class="select_entry">
-          <a href="edit/{{entry.id}}">Edit</a>
-        </div>
+{% endif %}
+
+<div=class="newEntry"></div>
+{% for entry in entries %}
+<article class="entry" id="entry={{entry.id}}">
+  <h3>{{ entry.title }}</h3>
+  <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
+  <div class="entry_body">
+    {{ entry.text|safe }}
+    {% if session.logged_in %}
+      <div class="select_entry">
+        <a href="edit/{{entry.id}}">Edit</a>
       </div>
-    </article>
-    {% else %}
-    <div class="entry">
-      <p><em>No entries here so far</em></p>
-    </div>
-    {% endfor %}
-{% endif %}
-{% if not session.logged_in %}
-  <h2>Entries</h2>
-  {% for entry in entries %}
-  <article class="entry" id="entry={{entry.id}}">
-    <h3>{{ entry.title }}</h3>
-    <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
-    <div class="entry_body">
-      {{ entry.text|safe }}
-    </div>
-  </article>
-  {% else %}
-  <div class="entry">
-    <p><em>No entries here so far</em></p>
+    {% endif %}
   </div>
-  {% endfor %}
-{% endif %}
+</article>
+
+{% else %}
+<div class="entry">
+  <p><em>No entries here so far</em></p>
+</div>
+{% endfor %}
 {% endblock %}

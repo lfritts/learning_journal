@@ -5,6 +5,7 @@ $(document).ready(function () {
             type: 'POST',
             data: $('form').serialize(),
             success: function(entryData) {
+                alert(entryData)
                 $('.newEntry').html(entryData);
                 $('.add_entry').remove();
             }
@@ -19,6 +20,7 @@ $(document).ready(function () {
             type: 'POST',
             data: $('form').serialize(),
             success: function(entryData) {
+                alert(entryData)
                 $('.newEntry').html(entryData);
                 $('.edit').remove();
             }
