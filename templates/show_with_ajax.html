@@ -1,10 +1,12 @@
-<aritcle class="entry" id="entry={{entry[0]}}">
+<article class="entry" id="entry={{entry[0]}}">
   <h3>{{ entry[1] }}</h3>
   <p class="dateline">{{ entry[3].strftime('%b. %d, %Y') }}
   <div class="entry_body">
-    {{ entry[2]|safe }}
+    <span>
+        {{ entry[2]|safe }}
+    </span>
     <div class="select_entry">
-      <a href="edit/{{entry.id}}">Edit</a>
+      <br><a href="#">Edit</a><br>
     </div>
   </div>
 </article>

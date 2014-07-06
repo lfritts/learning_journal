@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, g, render_template, abort, request
-from flask import url_for, redirect, session
+from flask import url_for, redirect, session, jsonify
 from passlib.hash import pbkdf2_sha256
 from contextlib import closing
 import os
@@ -191,7 +191,8 @@ def update(entry_id):
             update_entry(title, text, entry_id)
         except psycopg2.Error:
             abort(500)
-    return redirect(url_for('show_entries'))
+    # return redirect(url_for('show_entries'))
+    return jsonify(id="entry=" + str(entry_id), title=title, text=text)
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -12,7 +12,7 @@
     <textarea name="text" id="text" rows="5" cols="80"></textarea>
   </div>
   <div class="control_row">
-    <input type="submit" value="Share" name="Share"/>
+    <input type="submit" value="Share" name="Share" id="submit"/>
   </div>
 </form>
 </aside>
@@ -20,14 +20,17 @@
 
 <div=class="newEntry"></div>
 {% for entry in entries %}
-<article class="entry" id="entry={{entry.id}}">
-  <h3>{{ entry.title }}</h3>
+<article class="entry" id="entry={{entry.id}}" data-id="{{entry.id}}">
+  <h3 id="post-title">{{ entry.title }}</h3>
   <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
   <div class="entry_body">
-    {{ entry.text|safe }}
+    <span>
+      {{ entry.text|safe }}
+    </span>
     {% if session.logged_in %}
       <div class="select_entry">
-        <a href="edit/{{entry.id}}">Edit</a>
+        <!-- <a href="edit/{{entry.id}}" class="test">Edit</a> -->
+        <a href="#" class="edit-post">Edit</a>
       </div>
     {% endif %}
   </div>
