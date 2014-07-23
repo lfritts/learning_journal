@@ -7,6 +7,9 @@ import os
 import psycopg2
 import datetime
 import markdown
+from pyshorteners.shorteners import Shortener
+
+shortener = Shortener('GoogleShortener')
 
 
 # _____SQL SCRIPTS_____
@@ -150,7 +153,8 @@ def markdown_text(user_input):
 @app.route('/')
 def show_entries():
     entries = get_all_entries()
-    return render_template('list_entries.html', entries=entries)
+    return render_template('list_entries.html', entries=entries,
+        twitter_url=shortener.short(url_for('show_entries', _external=True)))
 
 
 @app.route('/add', methods=['POST'])
