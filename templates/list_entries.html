@@ -16,38 +16,35 @@
   </div>
 </form>
 </aside>
-  <h2>Entries</h2>
-    {% for entry in entries %}
-    <article class="entry" id="entry={{entry.id}}">
-      <h3>{{ entry.title }}</h3>
-      <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
-      <div class="entry_body">
-        {{ entry.text|safe }}
-        <div class="select_entry">
-          <a href="edit/{{entry.id}}">Edit</a>
-        </div>
-      </div>
-    </article>
-    {% else %}
-    <div class="entry">
-      <p><em>No entries here so far</em></p>
-    </div>
-    {% endfor %}
 {% endif %}
-{% if not session.logged_in %}
-  <h2>Entries</h2>
-  {% for entry in entries %}
-  <article class="entry" id="entry={{entry.id}}">
-    <h3>{{ entry.title }}</h3>
-    <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
-    <div class="entry_body">
-      {{ entry.text|safe }}
-    </div>
-  </article>
-  {% else %}
-  <div class="entry">
-    <p><em>No entries here so far</em></p>
+
+<div class="newEntry">
+  <div>
+      <p>
+
+      </p>
   </div>
-  {% endfor %}
-{% endif %}
+</div>
+{% for entry in entries %}
+<article class="entry" id="entry={{entry.id}}">
+  <h3>{{ entry.title }}</h3>
+  <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
+  <div class="entry_body">
+    {{ entry.text|safe }}
+    {% if session.logged_in %}
+      <div class="select_entry">
+        <a href="edit/{{entry.id}}">Edit</a>
+      </div>
+    {% endif %}
+    <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ twitter_url }}#entry={{entry.id}}" data-lang="en">Tweet</a>
+    </div>
+  </div>
+</article>
+
+{% else %}
+<div class="entry">
+  <p><em>No entries here so far</em></p>
+</div>
+{% endfor %}
 {% endblock %}
