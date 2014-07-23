@@ -18,7 +18,13 @@
 </aside>
 {% endif %}
 
-<div=class="newEntry"></div>
+<div class="newEntry">
+  <div>
+      <p>
+
+      </p>
+  </div>
+</div>
 {% for entry in entries %}
 <article class="entry" id="entry={{entry.id}}">
   <h3>{{ entry.title }}</h3>
@@ -30,6 +36,9 @@
         <a href="edit/{{entry.id}}">Edit</a>
       </div>
     {% endif %}
+    <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ twitter_url }}#entry={{entry.id}}" data-lang="en">Tweet</a>
+    </div>
   </div>
 </article>
 
